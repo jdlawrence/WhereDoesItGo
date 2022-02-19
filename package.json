@@ -1,0 +1,9 @@
+{
+  "name": "WhereDoesItGo",
+  "version": "1.0.0",
+  "description": "A way to follow your time",
+  "main": "index.js",
+  "repository": "https://github.com/jdlawrence/WhereDoesItGo.git",
+  "author": "Jamil Lawrence <jamil.lawrence@gmail.com>",
+  "license": "MIT"
+}
