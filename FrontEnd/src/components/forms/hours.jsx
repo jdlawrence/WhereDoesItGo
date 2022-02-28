@@ -2,6 +2,22 @@ const HOURS_IN_A_WEEK = 168;
 
 import React, { useState, useEffect } from "react";
 
+const Allotted = ({ allotmentName, allotmentVal, onAllotmentChange }) => {
+  return (
+    <div>
+      <label>
+        {allotmentName[0].toUpperCase() + allotmentName.substring(1)}:
+        <input
+          type="number"
+          name={allotmentName}
+          value={allotmentVal}
+          onChange={onAllotmentChange}
+        />
+      </label>
+    </div>
+  );
+};
+
 export function Hours() {
   const [inputs, setInputs] = useState({
     sleep: 0,
@@ -24,28 +40,20 @@ export function Hours() {
   return (
     <div>
       <div>
-        <label>
-          Sleep:
-          <input
-            type="number"
-            name="sleep"
-            value={inputs.sleep}
-            onChange={handleInput}
-          />
-        </label>
-        <label>
-          Work:
-          <input
-            type="number"
-            name="work"
-            value={inputs.work}
-            onChange={handleInput}
-          />
-        </label>
+        <Allotted
+          allotmentName="sleep"
+          allotmentVal={inputs.sleep}
+          onAllotmentChange={handleInput}
+        />
+        <Allotted
+          allotmentName="work"
+          allotmentVal={inputs.work}
+          onAllotmentChange={handleInput}
+        />
       </div>
       <div>
         <label>
-          Hours Remaining:
+          Weekly Hours Remaining:
           <span>{timeRemaining}</span>
         </label>
       </div>
