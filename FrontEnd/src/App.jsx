@@ -2,7 +2,7 @@ import { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import Hours from './components/forms/hours';
+import Hours from './components/Hours';
 
 function App() {
   const [count, setCount] = useState(0);
