@@ -1,5 +1,7 @@
 import create from 'zustand';
 import produce from 'immer';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const useStore = create(set => ({
   allotments: [
@@ -22,6 +24,18 @@ const useStore = create(set => ({
       })
     );
   },
+  addAllotment: (name, hours) => {
+    set(
+      produce(draft => {
+        draft.allotments.push({
+          id: uuidv4(),
+          name,
+          hours: parseInt(hours),
+        });
+      })
+    );
+  },
+
 }));
 
 export default useStore;
