@@ -6,16 +6,17 @@ const Allotment = ({ id, name, value }) => {
     setAllotment(event, id);
   };
   return (
-    <div>
-      <label>
+    <div className="border border-blue-500 w-60 grid ">
+      <label className="row-span-full">
         {name[0].toUpperCase() + name.substring(1)}:
-        <input
-          type="number"
-          name={name}
-          value={value}
-          onChange={handleChange(id)}
-        />
       </label>
+      <input
+        className="w-16 border rounded border-stone-500 row-span-full justify-self-end"
+        type="number"
+        name={name}
+        value={value}
+        onChange={handleChange(id)}
+      />
     </div>
   );
 };

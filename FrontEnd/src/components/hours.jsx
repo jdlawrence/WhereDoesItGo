@@ -40,12 +40,14 @@ export function Hours() {
     <div>
       <div>
         {allotments.map(allotment => (
-          <Allotment
-            key={allotment.id}
-            name={allotment.name}
-            value={allotment.hours}
-            id={allotment.id}
-          />
+          <div className="grid place-items-center">
+            <Allotment
+              key={allotment.id}
+              name={allotment.name}
+              value={allotment.hours}
+              id={allotment.id}
+            />
+          </div>
         ))}
       </div>
       <div>
