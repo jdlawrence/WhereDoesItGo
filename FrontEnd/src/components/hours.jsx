@@ -38,7 +38,7 @@ export function Hours() {
 
   return (
     <div>
-      <div>
+      <div className="mt-2">
         {allotments.map(allotment => (
           <div className="grid place-items-center">
             <Allotment
