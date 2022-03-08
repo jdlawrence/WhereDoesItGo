@@ -3,18 +3,34 @@ import produce from 'immer';
 import { v4 as uuidv4 } from 'uuid';
 
 
-const useStore = create(set => ({
+const useStore = create((set, get) => ({
   allotments: [
-    {
-      id: 'd22483dc-c352-4f99-aa4d-4a57de110f28',
-      name: 'sleep',
-      hours: 0,
-    },
     {
       id: 'aef65402-3595-4cbd-8b33-2271ca29b255',
       name: 'work',
-      hours: 0,
+      hours: 45,
     },
+    {
+      id: '59d1eecf-4176-4ea5-8355-0e53d23bccc5',
+      name: 'eating',
+      hours: 10.5,
+    },
+    {
+      id: '507f3449-55ae-4170-8e1b-0649f8794da7',
+      name: 'exercise',
+      hours: 6,
+    },
+    {
+      id: 'd22483dc-c352-4f99-aa4d-4a57de110f28',
+      name: 'sleep',
+      hours: 56,
+    },
+    {
+      id: 'b8b31591-fecb-426d-8ba7-25a3f2275620',
+      name: 'walking',
+      hours: 7,
+    },
+
   ],
   setAllotment: (event, id) => {
     set(
@@ -30,7 +46,7 @@ const useStore = create(set => ({
         draft.allotments.push({
           id: uuidv4(),
           name,
-          hours: parseInt(hours),
+          hours: parseFloat(hours),
         });
       })
     );

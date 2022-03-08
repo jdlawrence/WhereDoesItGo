@@ -10,6 +10,8 @@ export function Hours() {
   let allotments = useStore(state => state.allotments);
   const addAllotment = useStore(state => state.addAllotment);
 
+  let sortedAllotments = [...allotments].sort((a, b) => b.hours - a.hours);
+
   const [values, setValues] = useState({
     category: '',
     categoryHours: 0,
@@ -31,7 +33,7 @@ export function Hours() {
 
   useEffect(() => {
     const allotmentsSum = allotments
-      .reduce((prev, curr) => prev + parseInt(curr.hours), 0);
+      .reduce((prev, curr) => prev + parseFloat(curr.hours), 0);
 
     setTimeRemaining(HOURS_IN_A_WEEK - allotmentsSum);
   });
@@ -39,7 +41,7 @@ export function Hours() {
   return (
     <div>
       <div className="mt-2">
-        {allotments.map(allotment => (
+        {sortedAllotments.map(allotment => (
           <div className="grid place-items-center">
             <Allotment
               key={allotment.id}
@@ -71,7 +73,7 @@ export function Hours() {
           name="categoryHours"
           value={values.categoryHours}
           onChange={handleCategoryChange} />
-        <input type="submit" value="Add to Allotment" />
+        <button className="border ml-2" type="submit">Add to Allotment</button>
       </form>
     </div>
   );
