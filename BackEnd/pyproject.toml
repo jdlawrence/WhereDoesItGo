@@ -7,6 +7,11 @@ authors = ["Jamil Lawrence <jamil.lawrence@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 Flask = "^2.0.3"
+Flask-Cors = "^3.0.10"
+Flask-SQLAlchemy = "^2.5.1"
+psycopg2 = "^2.9.3"
+Flask-GraphQL = "^2.0.1"
+graphene-sqlalchemy = "^2.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
