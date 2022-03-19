@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:jamil123@database-1.cjlfu3i6ptp7.us-east-1.rds.amazonaws.com/postgres'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 Column, String, Float, Integer, Model = db.Column, db.String, db.Float, db.Integer, db.Model

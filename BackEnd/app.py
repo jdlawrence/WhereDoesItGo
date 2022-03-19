@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from db import *
 from schema import schema
 
-app = Flask(__name__)
 CORS(app)
 
 db.drop_all()
