@@ -42,9 +42,11 @@ export function Hours() {
     <div>
       <div className="mt-2">
         {sortedAllotments.map(allotment => (
-          <div className="grid place-items-center">
+          <div
+            className="grid place-items-center"
+            key={allotment.id}
+          >
             <Allotment
-              key={allotment.id}
               name={allotment.name}
               value={allotment.hours}
               id={allotment.id}

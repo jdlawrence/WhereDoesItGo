@@ -1,9 +1,21 @@
 import create from 'zustand';
 import produce from 'immer';
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
+
+async function getUser() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/jamil');
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+getUser();
 
 
-const useStore = create((set, get) => ({
+const useStore = create(set => ({
   allotments: [
     {
       id: 'aef65402-3595-4cbd-8b33-2271ca29b255',
