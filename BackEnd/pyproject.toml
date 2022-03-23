@@ -12,6 +12,7 @@ Flask-SQLAlchemy = "^2.5.1"
 psycopg2 = "^2.9.3"
 Flask-GraphQL = "^2.0.1"
 graphene-sqlalchemy = "^2.3.0"
+black = "^22.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
