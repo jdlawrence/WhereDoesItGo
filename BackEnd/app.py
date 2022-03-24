@@ -3,7 +3,7 @@ from flask_graphql import GraphQLView
 from markupsafe import escape
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-
+from db import *
 from schema import schema
 
 CORS(app)
