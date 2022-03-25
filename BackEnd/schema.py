@@ -29,8 +29,8 @@ class Query(graphene.ObjectType):
         lambda: User, username=graphene.String(), email=graphene.String()
     )
 
-    def resolve_users(self, info, **args):
-        username = args.get("username")
+    def resolve_users(self, info, **kwargs):
+        username = kwargs.get("username")
 
         query = User.get_query(info)
 
@@ -42,5 +42,25 @@ class Query(graphene.ObjectType):
         # Since we say we're returning a list, we must surround our results in brackets
         return [users]
 
+class UserMutation(graphene.Mutation):
+   class Arguments:
+       username = graphene.String(required=True)
+       email = graphene.String(required=True)
 
-schema = graphene.Schema(query=Query)
+   user = graphene.Field(lambda: User)
+
+   def mutate(self, info, **kwargs):
+       username = kwargs.get("username")
+       email = kwargs.get("email")
+       user = UserModel(username=username, email=email)
+
+       db.session.add(user)
+       db.session.commit()
+
+       return UserMutation(user=user)
+
+class Mutation(graphene.ObjectType):
+   mutate_user = UserMutation.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
