@@ -25,7 +25,7 @@ class Query(graphene.ObjectType):
     all_allotments = SQLAlchemyConnectionField(Allotment.connection)
 
     # TODO: Find out what this lambda does
-    user = graphene.List(
+    user = graphene.Field(
         lambda: User, username=graphene.String(), email=graphene.String()
     )
 
@@ -39,7 +39,7 @@ class Query(graphene.ObjectType):
 
         query = User.get_query(info)
 
-        user = query.filter_by(username=username).all()
+        user = query.filter_by(username=username).first()
 
         return user
 
@@ -78,12 +78,16 @@ class AddAllotmentInput(graphene.InputObjectType):
     username = graphene.String(required=True)
 
 
+class AddAllotmentPayload(graphene.ObjectType):
+    user = graphene.Field(lambda: User)
+    allotment = graphene.Field(lambda: Allotment)
+
+
 class AddAllotment(graphene.Mutation):
     class Arguments:
         add_allotment_input = AddAllotmentInput(required=True)
 
-    user = graphene.Field(lambda: User)
-    allotment = graphene.Field(lambda: Allotment)
+    payload = graphene.Field(AddAllotmentPayload)
 
     def mutate(self, info, add_allotment_input):
         name = add_allotment_input.get("name")
@@ -93,10 +97,12 @@ class AddAllotment(graphene.Mutation):
         user = UserModel.query.filter_by(username=username).first()
         allotment = AllotmentModel(name=name, hours=hours)
 
+        payload = AddAllotmentPayload(user=user, allotment=allotment)
+
         user.allotments.append(allotment)
         db.session.commit()
 
-        return AddAllotment(user=user, allotment=allotment)
+        return AddAllotment(payload=payload)
 
 
 class Mutation(graphene.ObjectType):
