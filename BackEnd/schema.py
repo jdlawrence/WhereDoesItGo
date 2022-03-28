@@ -73,18 +73,28 @@ class AllotmentMutation(graphene.Mutation):
     class Arguments:
         name = graphene.String(required=True)
         hours = graphene.Float(required=True)
-        user_id = graphene.Int(required=True)
+        username = graphene.String(required=True)
 
     allotment = graphene.Field(lambda: Allotment)
 
     def mutate(self, info, **kwargs):
         name = kwargs.get("name")
         hours = kwargs.get("hours")
-        user_id = kwargs.get("hours")
+        username = kwargs.get("username")
+
+        user = UserModel.query.filter_by(username=username).first()
+        allotment = AllotmentModel(name=name, hours=hours)
+
+        user.allotments.append(allotment)
+        db.session.commit()
+
+        return AllotmentMutation(allotment=allotment)
+
 
 
 class Mutation(graphene.ObjectType):
     mutate_user = UserMutation.Field()
+    create_allotment = AllotmentMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
