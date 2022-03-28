@@ -51,36 +51,44 @@ class Query(graphene.ObjectType):
         return user.allotments
 
 
-class UserMutation(graphene.Mutation):
+class AddUserInput(graphene.InputObjectType):
+    username = graphene.String(required=True)
+    email = graphene.String(required=True)
+
+class AddUser(graphene.Mutation):
     class Arguments:
-        username = graphene.String(required=True)
-        email = graphene.String(required=True)
+        add_user_input = AddUserInput(required=True)
 
     user = graphene.Field(lambda: User)
 
-    def mutate(self, info, **kwargs):
-        username = kwargs.get("username")
-        email = kwargs.get("email")
+    def mutate(self, info, add_user_input):
+        username = add_user_input.get("username")
+        email = add_user_input.get("email")
         user = UserModel(username=username, email=email)
 
         db.session.add(user)
         db.session.commit()
 
-        return UserMutation(user=user)
+        return AddUser(user=user)
 
 
-class AllotmentMutation(graphene.Mutation):
+class AddAllotmentInput(graphene.InputObjectType):
+    name = graphene.String(required=True)
+    hours = graphene.Float(required=True)
+    username = graphene.String(required=True)
+
+
+class AddAllotment(graphene.Mutation):
     class Arguments:
-        name = graphene.String(required=True)
-        hours = graphene.Float(required=True)
-        username = graphene.String(required=True)
+        add_allotment_input = AddAllotmentInput(required=True)
 
+    user = graphene.Field(lambda: User)
     allotment = graphene.Field(lambda: Allotment)
 
-    def mutate(self, info, **kwargs):
-        name = kwargs.get("name")
-        hours = kwargs.get("hours")
-        username = kwargs.get("username")
+    def mutate(self, info, add_allotment_input):
+        name = add_allotment_input.get("name")
+        hours = add_allotment_input.get("hours")
+        username = add_allotment_input.get("username")
 
         user = UserModel.query.filter_by(username=username).first()
         allotment = AllotmentModel(name=name, hours=hours)
@@ -88,13 +96,12 @@ class AllotmentMutation(graphene.Mutation):
         user.allotments.append(allotment)
         db.session.commit()
 
-        return AllotmentMutation(allotment=allotment)
-
+        return AddAllotment(user=user, allotment=allotment)
 
 
 class Mutation(graphene.ObjectType):
-    mutate_user = UserMutation.Field()
-    create_allotment = AllotmentMutation.Field()
+    add_user = AddUser.Field()
+    add_allotment = AddAllotment.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
