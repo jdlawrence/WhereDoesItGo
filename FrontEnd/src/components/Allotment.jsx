@@ -1,9 +1,9 @@
 import useStore from "../stores/store";
 
 const Allotment = ({ id, name, value }) => {
-  const setAllotment = useStore(state => state.setAllotment);
+  const setAllotmentHours = useStore(state => state.setAllotmentHours);
   const handleChange = (id) => (event) => {
-    setAllotment(event, id);
+    setAllotmentHours(event, id);
   };
   return (
     <div className="shadow-md shadow-slate-800 rounded mb-2 w-80 grid bg-slate-700 text-slate-100 p-1.5 ">
