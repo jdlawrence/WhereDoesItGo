@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from "react";
-import useStore from "../stores/store";
+import { useQueryClient } from "react-query";
+import { v4 as uuidv4 } from 'uuid';
+import { useAddAllotment } from "../data-retrieval/mutations";
+import { useAllotments } from "../data-retrieval/queries";
 import Allotment from "./Allotment";
 
 const HOURS_IN_A_WEEK = 168;
 
+function Hours() {
+  const { status, data: allotments, error, isFetching } = useAllotments();
+  const queryClient = useQueryClient();
 
+  async function handleSuccessfulAdd(newAllotment) {
+    // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+    await queryClient.cancelQueries('allotments');
 
-export function Hours() {
-  let allotments = useStore(state => state.allotments);
-  const addAllotment = useStore(state => state.addAllotment);
+    // Snapshot the previous value
+    const previousAllotments = queryClient.getQueryData('allotments');
 
-  let sortedAllotments = [...allotments].sort((a, b) => b.hours - a.hours);
+    // Optimistically update to the new value
+    queryClient.setQueryData('allotments', old => [...old, newAllotment]);
+
+    // Return a context object with the snapshotted value
+    return { previousAllotments };
+
+  }
+  const { mutate: addAllotment } = useAddAllotment({ onMutate: handleSuccessfulAdd });
+
+  const sortedAllotments = allotments ? [...allotments,].sort((a, b) => b.hours - a.hours) : [];
 
   const [values, setValues] = useState({
     category: '',
@@ -26,14 +43,20 @@ export function Hours() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    addAllotment(values.category, values.categoryHours);
+    addAllotment({
+      username: 'Jamil',
+      name: values.category,
+      hours: values.categoryHours,
+      idUuid: uuidv4()
+    });
   };
 
   const [timeRemaining, setTimeRemaining] = useState(HOURS_IN_A_WEEK);
 
   useEffect(() => {
-    const allotmentsSum = allotments
-      .reduce((prev, curr) => prev + parseFloat(curr.hours), 0);
+    const allotmentsSum = allotments ?
+      allotments.reduce((prev, curr) => prev + parseFloat(curr.hours), 0) :
+      0;
 
     setTimeRemaining(HOURS_IN_A_WEEK - allotmentsSum);
   });
@@ -44,12 +67,12 @@ export function Hours() {
         {sortedAllotments.map(allotment => (
           <div
             className="grid place-items-center"
-            key={allotment.id}
+            key={allotment.idUuid}
           >
             <Allotment
+              id={allotment.id}
               name={allotment.name}
               value={allotment.hours}
-              id={allotment.id}
             />
           </div>
         ))}

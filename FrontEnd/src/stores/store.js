@@ -1,21 +1,10 @@
 import create from 'zustand';
 import produce from 'immer';
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
+import { devtools } from 'zustand/middleware';
 
-async function getUser() {
-  try {
-    const response = await axios.get('http://127.0.0.1:5000/jamil');
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-getUser();
-
-
-const useStore = create(set => ({
+// Usage with a plain action store, it will log actions as "setState"
+const useStore = create(devtools(set => ({
   allotments: [
     {
       id: 'aef65402-3595-4cbd-8b33-2271ca29b255',
@@ -42,9 +31,8 @@ const useStore = create(set => ({
       name: 'walking',
       hours: 7,
     },
-
   ],
-  setAllotment: (event, id) => {
+  setAllotmentHours: (event, id) => {
     set(
       produce(draft => {
         const allotment = draft.allotments.find(allotment => allotment.id === id);
@@ -64,7 +52,7 @@ const useStore = create(set => ({
     );
   },
 
-}));
+})));
 
 export default useStore;
 

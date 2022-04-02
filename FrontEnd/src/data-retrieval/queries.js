@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { request, gql } from 'graphql-request';
 
+// TODO: Remove hard coded user
 async function fetchAllotments(user) {
   const endpoint = 'http://127.0.0.1:5000/graphql';
   const variables = {
@@ -17,7 +18,7 @@ async function fetchAllotments(user) {
           name
           hours
           userId
-          id
+          idUuid
         }
       }
     `,
@@ -26,8 +27,7 @@ async function fetchAllotments(user) {
   return allotments;
 }
 
-fetchAllotments().catch((error) => console.error(error));
-
+// TODO: Remove hard coded user
 export function useAllotments(user) {
   return useQuery('allotments', fetchAllotments);
 }
