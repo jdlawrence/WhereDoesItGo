@@ -44,7 +44,7 @@ class Allotment(Model):
     name = Column(String(80), nullable=False)
     hours = Column(Float)
     user_id = Column(Integer, ForeignKey("user.id"))
-    id_uuid = Column(UUID(as_uuid=True), nullable=True)
+    id_uuid = Column(UUID(as_uuid=True), nullable=False)
 
     def __repr__(self):
         return "<Allotment %r>" % self.name
