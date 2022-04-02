@@ -76,6 +76,7 @@ class AddAllotmentInput(graphene.InputObjectType):
     name = graphene.String(required=True)
     hours = graphene.Float(required=True)
     username = graphene.String(required=True)
+    id_uuid = graphene.UUID(required=True)
 
 
 class AddAllotmentPayload(graphene.ObjectType):
@@ -93,9 +94,10 @@ class AddAllotment(graphene.Mutation):
         name = add_allotment_input.get("name")
         hours = add_allotment_input.get("hours")
         username = add_allotment_input.get("username")
+        id_uuid = add_allotment_input.get("id_uuid")
 
         user = UserModel.query.filter_by(username=username).first()
-        allotment = AllotmentModel(name=name, hours=hours)
+        allotment = AllotmentModel(name=name, hours=hours, id_uuid=id_uuid)
 
         payload = AddAllotmentPayload(user=user, allotment=allotment)
 
