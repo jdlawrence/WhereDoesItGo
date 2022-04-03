@@ -106,10 +106,34 @@ class AddAllotment(graphene.Mutation):
 
         return AddAllotment(payload=payload)
 
+class DeleteAllotmentInput(graphene.InputObjectType):
+    id_uuid = graphene.UUID(required=True)
+
+class DeleteAllotmentPayload(graphene.ObjectType):
+    user = graphene.Field(lambda: User)
+    allotment = graphene.Field(lambda: Allotment)
+
+class DeleteAllotment(graphene.Mutation):
+    class Arguments:
+        delete_allotment_input = DeleteAllotmentInput(required=True)
+
+    payload = graphene.Field(DeleteAllotmentPayload)
+
+    def mutate(self, info, delete_allotment_input):
+        id_uuid = delete_allotment_input.get("id_uuid")
+        allotment = AllotmentModel.query.filter_by(id_uuid=id_uuid).first()
+        user = UserModel.query.get(allotment.user_id)
+        payload = DeleteAllotmentPayload(user=user, allotment=allotment)
+
+        db.session.delete(allotment)
+        db.session.commit()
+
+        return AddAllotment(payload=payload)
 
 class Mutation(graphene.ObjectType):
     add_user = AddUser.Field()
     add_allotment = AddAllotment.Field()
+    delete_allotment = DeleteAllotment.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
