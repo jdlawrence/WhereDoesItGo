@@ -1,10 +1,13 @@
 import useStore from "../stores/store";
 
-const Allotment = ({ id, name, value }) => {
+const Allotment = ({ id, name, value, deleteAllotment }) => {
   const setAllotmentHours = useStore(state => state.setAllotmentHours);
   const handleChange = (id) => (event) => {
     setAllotmentHours(event, id);
   };
+
+  const handleClick = () => deleteAllotment(id);
+
   return (
     <div className="shadow-md shadow-slate-800 rounded mb-2 w-80 grid bg-slate-700 text-slate-100 p-1.5 ">
       <label className="row-span-full">
@@ -17,6 +20,7 @@ const Allotment = ({ id, name, value }) => {
         value={value}
         onChange={handleChange(id)}
       />
+      <button onClick={handleClick}>del</button>
     </div>
   );
 };

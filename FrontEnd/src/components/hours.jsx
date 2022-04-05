@@ -61,6 +61,10 @@ function Hours() {
     setTimeRemaining(HOURS_IN_A_WEEK - allotmentsSum);
   });
 
+  const deleteAllotment = (idUuid) => {
+    console.log('id', idUuid);
+  };
+
   return (
     <div>
       <div className="mt-2">
@@ -70,7 +74,8 @@ function Hours() {
             key={allotment.idUuid}
           >
             <Allotment
-              id={allotment.id}
+              deleteAllotment={deleteAllotment}
+              id={allotment.idUuid}
               name={allotment.name}
               value={allotment.hours}
             />
