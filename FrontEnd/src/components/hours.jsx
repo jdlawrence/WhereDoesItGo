@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { v4 as uuidv4 } from 'uuid';
-import { useAddAllotment } from "../data-retrieval/mutations";
+import { useAddAllotment, useDeleteAllotment } from "../data-retrieval/mutations";
 import { useAllotments } from "../data-retrieval/queries";
 import Allotment from "./Allotment";
 
@@ -10,6 +10,7 @@ const HOURS_IN_A_WEEK = 168;
 function Hours() {
   const { status, data: allotments, error, isFetching } = useAllotments();
   const queryClient = useQueryClient();
+
 
   async function handleSuccessfulAdd(newAllotment) {
     // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
@@ -23,9 +24,26 @@ function Hours() {
 
     // Return a context object with the snapshotted value
     return { previousAllotments };
-
   }
+
+  async function handleSuccessfulDeletion({ idUuid }) {
+    // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+    await queryClient.cancelQueries('allotments');
+
+    // Snapshot the previous value
+    const previous = queryClient.getQueryData('allotments');
+
+    const newAllotments = previous.filter(allotment => allotment.idUuid != idUuid);
+
+    // Optimistically update to the new value
+    queryClient.setQueryData('allotments', () => newAllotments);
+
+    // Return a context object with the snapshotted value
+    return { previous };
+  }
+
   const { mutate: addAllotment } = useAddAllotment({ onMutate: handleSuccessfulAdd });
+  const { mutate: deleteAllotment } = useDeleteAllotment({ onMutate: handleSuccessfulDeletion });
 
   const sortedAllotments = allotments ? [...allotments,].sort((a, b) => b.hours - a.hours) : [];
 
@@ -60,10 +78,6 @@ function Hours() {
 
     setTimeRemaining(HOURS_IN_A_WEEK - allotmentsSum);
   });
-
-  const deleteAllotment = (idUuid) => {
-    console.log('id', idUuid);
-  };
 
   return (
     <div>
