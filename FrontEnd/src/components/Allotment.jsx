@@ -6,7 +6,7 @@ const Allotment = ({ id, name, value, deleteAllotment }) => {
     setAllotmentHours(event, id);
   };
 
-  const handleClick = () => deleteAllotment({idUuid: id});
+  const handleClick = () => deleteAllotment.mutate({idUuid: id});
 
   return (
     <div className="shadow-md shadow-slate-800 rounded mb-2 w-80 grid bg-slate-700 text-slate-100 p-1.5 ">

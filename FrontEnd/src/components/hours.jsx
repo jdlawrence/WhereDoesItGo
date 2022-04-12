@@ -9,9 +9,8 @@ const HOURS_IN_A_WEEK = 168;
 
 function Hours() {
   const { status, data: allotments, error, isFetching } = useAllotments();
-  // const { mutate: addAllotment } = useAddAllotment({ onMutate: handleSuccessfulAdd });
-  const [ addAllotment ] = useAddAllotment({ onMutate: handleSuccessfulAdd });
-  const { mutate: deleteAllotment } = useDeleteAllotment({ onMutate: handleSuccessfulDeletion });
+  const addAllotment = useAddAllotment({ onMutate: handleSuccessfulAdd });
+  const deleteAllotment = useDeleteAllotment({ onMutate: handleSuccessfulDeletion });
   const queryClient = useQueryClient();
 
 
@@ -59,7 +58,7 @@ function Hours() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    addAllotment({
+    addAllotment.mutate({
       username: 'Jamil',
       name: values.category,
       hours: values.categoryHours,
