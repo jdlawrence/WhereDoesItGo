@@ -9,6 +9,9 @@ const HOURS_IN_A_WEEK = 168;
 
 function Hours() {
   const { status, data: allotments, error, isFetching } = useAllotments();
+  // const { mutate: addAllotment } = useAddAllotment({ onMutate: handleSuccessfulAdd });
+  const [ addAllotment ] = useAddAllotment({ onMutate: handleSuccessfulAdd });
+  const { mutate: deleteAllotment } = useDeleteAllotment({ onMutate: handleSuccessfulDeletion });
   const queryClient = useQueryClient();
 
 
@@ -33,17 +36,12 @@ function Hours() {
     // Snapshot the previous value
     const previous = queryClient.getQueryData('allotments');
 
-    const newAllotments = previous.filter(allotment => allotment.idUuid != idUuid);
-
     // Optimistically update to the new value
-    queryClient.setQueryData('allotments', () => newAllotments);
+    queryClient.setQueryData('allotments', old => old.filter(item => item.idUuid != idUuid));
 
     // Return a context object with the snapshotted value
     return { previous };
   }
-
-  const { mutate: addAllotment } = useAddAllotment({ onMutate: handleSuccessfulAdd });
-  const { mutate: deleteAllotment } = useDeleteAllotment({ onMutate: handleSuccessfulDeletion });
 
   const sortedAllotments = allotments ? [...allotments,].sort((a, b) => b.hours - a.hours) : [];
 
